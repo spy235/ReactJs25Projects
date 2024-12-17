@@ -1,9 +1,10 @@
-import RandomColor from "./components/randomColor/RandomColor";
+import Accordian from "./components/accordian/Accordian";
+import StarRating from "./components/starrating/StarRating";
 
 function App() {
   return (
     <div className="App">
-      <RandomColor />
+      <StarRating number={5} />
     </div>
   );
 }

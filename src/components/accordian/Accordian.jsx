@@ -1,69 +1,67 @@
-import React, { useState } from "react";
+
+
+import { useState } from "react";
+import data from "../data";
 import "./Accordian.css";
-import data from "./data";
 
-const Accordian = () => {
-  const [selected, setSelected] = useState([]);
-  const [isMultiple,setIsMultiple] = useState(false);
+export default function Accordian() {
+  const [selected, setSelected] = useState(null);
+  const [enableMultiSelection, setEnableMultiSelection] = useState(false);
+  const [multiple, setMultiple] = useState([]);
 
-  function handleSelectedItem(id) {
-    //  setSelected( selectedId => !selectedId.find(id) && selectedId.push(id));
-    if(isMultiple){
-        if (selected.indexOf(id) === -1) {
-            const selectedItem = [...selected, id];
-            setSelected(selectedItem);
-          }
-          else{
-      //filter method:  Remove All Occurrences of a Value(why you need elephant to kill an ant)
-            
-      
-      //we can use splice : Remove by Value (First Occurrence)
-          //  const selectedItem = selected.splice(id,1); 
-          //   setSelected(selectedItem);
-                }
-
-    }
-    else{
-              setSelected([id]);
-
-    }
-    
-    
-
-    console.log(selected);
+  function handleSingleSelection(getCurrentId) {
+    setSelected(getCurrentId === selected ? null : getCurrentId);
   }
 
+  function handleMultiSelection(getCurrentId) {
+    let cpyMutiple = [...multiple];
+    const findIndexOfCurrentId = cpyMutiple.indexOf(getCurrentId);
+
+    console.log(findIndexOfCurrentId);
+    if (findIndexOfCurrentId === -1) cpyMutiple.push(getCurrentId);
+    else cpyMutiple.splice(findIndexOfCurrentId, 1);
+
+    setMultiple(cpyMutiple);
+  }
+
+  console.log(selected, multiple);
   return (
     <div className="acc-wrapper">
-      <button onClick={()=>setIsMultiple(!isMultiple)}>Enable Multi Selection</button>
-        {data.length === 0 ? (
-          <div>No data found !</div>
+      <button onClick={() => setEnableMultiSelection(!enableMultiSelection)}>
+        Enable Multi Selection
+      </button>
+      <div className="accordian">
+        {data && data.length > 0 ? (
+          data.map((dataItem) => (
+            <div className="item">
+              <div
+                onClick={
+                  enableMultiSelection
+                    ? () => handleMultiSelection(dataItem.id)
+                    : () => handleSingleSelection(dataItem.id)
+                }
+                className="title"
+              >
+                <h3>{dataItem.question}</h3>
+                <span>+</span>
+              </div>
+              {enableMultiSelection
+                ? multiple.indexOf(dataItem.id) !== -1 && (
+                    <div className="acc-content ">{dataItem.answer}</div>
+                  )
+                : selected === dataItem.id && (
+                    <div className="acc-content ">{dataItem.answer}</div>
+                  )}
+              {/* {selected === dataItem.id ||
+              multiple.indexOf(dataItem.id) !== -1 ? (
+                <div className="content">{dataItem.answer}</div>
+              ) : null} */}
+            </div>
+          ))
         ) : (
-            <div className="accordian">
-          <div className="item">
-            {data.map((accord) => (
-              <>
-                <div
-                  onClick={() => handleSelectedItem(accord.id)}
-                  className="title"
-                >
-                  <h3>{accord.question}</h3>
-                  <span>+</span>
-                </div>
-                {selected.map(
-                  (id) =>
-                    accord.id === id && (
-                      <div className="acc-content">{accord.answer}</div>
-                    )
-                )}
-              </>
-            ))}
-          </div>
-          </div>
-
+          <div>No data found !</div>
         )}
+      </div>
     </div>
   );
-};
-
-export default Accordian;
+}
