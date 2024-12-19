@@ -1,12 +1,10 @@
-import Accordian from "./components/accordian/Accordian";
-import ImageSlider from "./components/imagesSlider/ImageSlider";
-import LoadMore from "./components/loadmore/LoadMore";
-import StarRating from "./components/starrating/StarRating";
+import TreeView from "./components/treeNavBar";
+import menus from "./components/treeNavBar/data";
 
 function App() {
   return (
     <div className="App">
-      <LoadMore />
+      <TreeView menus={menus} />
     </div>
   );
 }
